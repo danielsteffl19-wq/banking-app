@@ -14,9 +14,6 @@ class Bank:
         self.next_account_number += 1
         self.save_accounts()
 
-        print(f"Účet pro {name} byl úspěšně vytvořen.")
-        print(f"Číslo účtu: {account_number}")
-
         return new_account
 
     def find_account(self, account_number: int):
@@ -44,9 +41,14 @@ class Bank:
     def load_accounts(self):
         try:
             with open("accounts.json", "r", encoding="utf-8") as file:
-                data = json.load(file)
+                contents = file.read()
         except FileNotFoundError:
             return
+
+        if not contents.strip():
+            return
+
+        data = json.loads(contents)
 
         for item in data:
             account = Account(

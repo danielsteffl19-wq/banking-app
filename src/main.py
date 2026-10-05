@@ -1,31 +1,44 @@
+import math
+
 from bank import Bank
+
+BOLD = "\033[1m"
+WHITE = "\033[97m"
+BLUE = "\033[94m"
+GREEN = "\033[92m"
+RED = "\033[91m"
+RESET = "\033[0m"
+
+
+def styled(text, color, bold=False):
+    return f"{BOLD if bold else ''}{color}{text}{RESET}"
+
 
 def account_menu(account, bank):
     while True:
-        print("\n====================")
-        print("    ÚČETNÍ MENU")
-        print("====================")
-        print("1. Zobrazit zůstatek")
-        print("2. Vklad")
-        print("3. Výběr")
-        print("4. Historie transakcí")
-        print("5. Odhlásit se")
-        print("====================")
+        print(f"\n{styled('    ÚČETNÍ MENU', BLUE, bold=True)}")
+        print(styled("--------------------", BLUE))
+        print(styled("1. Zobrazit zůstatek", WHITE))
+        print(styled("2. Vklad", WHITE))
+        print(styled("3. Výběr", WHITE))
+        print(styled("4. Historie transakcí", WHITE))
+        print(styled("5. Odhlásit se", WHITE))
+        print(styled("--------------------", BLUE))
 
-        volba = input("Vyber možnost: ")
+        volba = input(styled("Vyber možnost: ", BLUE, bold=True))
 
         if volba == "1":
-            print(f"\nZůstatek: {account.balance} Kč")
+            print(f"\n{styled(f'Zůstatek: {account.balance} Kč', GREEN, bold=True)}")
 
         elif volba == "2":
             try:
-                amount = float(input("Zadej částku k vkladu: "))
+                amount = float(input(styled("Zadej částku k vkladu: ", BLUE)))
             except ValueError:
-                print("Částka musí být číslo.")
+                print(styled("Částka musí být číslo.", RED))
                 continue
 
-            if amount <= 0:
-                print("Částka musí být větší než 0 Kč.")
+            if not math.isfinite(amount) or amount <= 0:
+                print(styled("Částka musí být větší než 0 Kč.", RED))
                 continue
 
             account.deposit(amount)
@@ -33,88 +46,93 @@ def account_menu(account, bank):
 
         elif volba == "3":
             try:
-                amount = float(input("Zadej částku k výběru: "))
+                amount = float(input(styled("Zadej částku k výběru: ", BLUE)))
             except ValueError:
-                print("Částka musí být číslo.")
+                print(styled("Částka musí být číslo.", RED))
                 continue
 
-            if amount <= 0:
-                print("Částka musí být větší než 0 Kč.")
+            if not math.isfinite(amount) or amount <= 0:
+                print(styled("Částka musí být větší než 0 Kč.", RED))
                 continue
 
             account.withdraw(amount)
             bank.save_accounts()
 
         elif volba == "4":
-            print("\n--- Historie transakcí ---")
+            print(f"\n{styled('Historie transakcí', BLUE, bold=True)}")
 
             if not account.transactions:
-                print("Zatím žádné transakce.")
+                print(styled("Zatím žádné transakce.", WHITE))
             else:
                 for transaction in account.transactions:
-                    print(transaction)
+                    print(styled(transaction, WHITE))
 
         elif volba == "5":
-            print("\nOdhlášení...")
+            print(f"\n{styled('Odhlášení...', WHITE)}")
             break
 
         else:
-            print("\nNeplatná volba!")
+            print(f"\n{styled('Neplatná volba!', RED)}")
+
 
 def menu(bank: Bank):
     while True:
-        print("\n====================")
-        print("     BANKING APP")
-        print("====================")
-        print("1. Vytvořit účet")
-        print("2. Přihlásit se")
-        print("3. Konec")
-        print("====================")
+        print(f"\n{styled('     BANKING APP', BLUE, bold=True)}")
+        print(styled("--------------------", BLUE))
+        print(styled("1. Vytvořit účet", WHITE))
+        print(styled("2. Přihlásit se", WHITE))
+        print(styled("3. Konec", WHITE))
+        print(styled("--------------------", BLUE))
 
-        volba = input("Vyber možnost: ")
+        volba = input(styled("Vyber možnost: ", BLUE, bold=True))
 
         if volba == "1":
-            print("\n--- Vytvoření účtu ---")
+            print(f"\n{styled('Vytvoření účtu', BLUE, bold=True)}")
 
-            name = input("Zadej jméno: ")
+            name = input(styled("Zadej jméno: ", BLUE))
             if not name.strip():
-                print("Jméno nesmí být prázdné.")
+                print(styled("Jméno nesmí být prázdné.", RED))
                 continue
 
-            pin = input("Zadej PIN: ")
+            pin = input(styled("Zadej PIN: ", BLUE))
             if not pin.isdigit() or len(pin) != 4:
-                print("PIN musí obsahovat přesně 4 číslice.")
+                print(styled("PIN musí obsahovat přesně 4 číslice.", RED))
                 continue
 
-            bank.create_account(name, pin)
+            account = bank.create_account(name, pin)
+            print(styled(
+                f"\nÚčet pro {name} byl vytvořen. \nČíslo účtu: {account.account_number}",
+                GREEN,
+            ))
 
         elif volba == "2":
-            print("\n--- Přihlášení ---")
+            print(f"\n{styled('Přihlášení', BLUE, bold=True)}")
 
             try:
-                account_number = int(input("Zadej číslo účtu: "))
+                account_number = int(input(styled("Zadej číslo účtu: ", BLUE)))
             except ValueError:
-                print("Číslo účtu musí být číslo.")
+                print(styled("Číslo účtu musí být číslo.", RED))
                 continue
 
             account = bank.find_account(account_number)
 
             if account is None:
-                print("Účet nebyl nalezen.")
+                print(styled("Účet nebyl nalezen.", RED))
             else:
-                pin = input("Zadej PIN: ")
+                pin = input(styled("Zadej PIN: ", BLUE))
 
                 if pin == account.pin:
-                    print(f"\nVítej, {account.name}!")
+                    print(f"\n{styled(f'Vítej, {account.name}!', GREEN, bold=True)}")
                     account_menu(account, bank)
                 else:
-                    print("Nesprávný PIN.")
+                    print(styled("Nesprávný PIN.", RED))
 
         elif volba == "3":
-            print("\nProgram ukončen.")
+            print(f"\n{styled('Program ukončen.', WHITE)}")
             break
         else:
-            print("\nNeplatná volba!")
+            print(f"\n{styled('Neplatná volba!', RED)}")
+
 
 if __name__ == "__main__":
     bank = Bank()
