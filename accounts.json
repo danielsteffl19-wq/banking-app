@@ -1,0 +1,19 @@
+[
+    {
+        "account_number": 100001,
+        "name": "3453",
+        "pin": "3453",
+        "balance": 0.0,
+        "transactions": []
+    },
+    {
+        "account_number": 100002,
+        "name": "1",
+        "pin": "1000",
+        "balance": 666.0,
+        "transactions": [
+            "Vklad: 1000.0 Kč",
+            "Výběr: 334.0 Kč"
+        ]
+    }
+]

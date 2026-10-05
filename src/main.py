@@ -1,6 +1,6 @@
 from bank import Bank
 
-def account_menu(account):
+def account_menu(account, bank):
     while True:
         print("\n====================")
         print("    ÚČETNÍ MENU")
@@ -29,6 +29,7 @@ def account_menu(account):
                 continue
 
             account.deposit(amount)
+            bank.save_accounts()
 
         elif volba == "3":
             try:
@@ -42,6 +43,7 @@ def account_menu(account):
                 continue
 
             account.withdraw(amount)
+            bank.save_accounts()
 
         elif volba == "4":
             print("\n--- Historie transakcí ---")
@@ -62,7 +64,7 @@ def account_menu(account):
 def menu(bank: Bank):
     while True:
         print("\n====================")
-        print("     BANKING APP     ")
+        print("     BANKING APP")
         print("====================")
         print("1. Vytvořit účet")
         print("2. Přihlásit se")
@@ -104,7 +106,7 @@ def menu(bank: Bank):
 
                 if pin == account.pin:
                     print(f"\nVítej, {account.name}!")
-                    account_menu(account)
+                    account_menu(account, bank)
                 else:
                     print("Nesprávný PIN.")
 
