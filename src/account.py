@@ -1,9 +1,10 @@
 class Account:
-    def __init__(self, name: str, pin: str):
+    def __init__(self, account_number: int, name: str, pin: str):
         self.name: str = name
         self.pin: str = pin
         self.balance: float = 0.0
         self.transactions: list[str] = []
+        self.account_number: int = account_number
 
     def deposit(self, amount: float):
         if amount > 0:
