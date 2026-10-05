@@ -73,8 +73,16 @@ def menu(bank: Bank):
 
         if volba == "1":
             print("\n--- Vytvoření účtu ---")
+
             name = input("Zadej jméno: ")
+            if not name.strip():
+                print("Jméno nesmí být prázdné.")
+                continue
+
             pin = input("Zadej PIN: ")
+            if not pin.isdigit() or len(pin) != 4:
+                print("PIN musí obsahovat přesně 4 číslice.")
+                continue
 
             bank.create_account(name, pin)
 
