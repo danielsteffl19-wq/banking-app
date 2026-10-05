@@ -15,3 +15,10 @@ class Bank:
         print(f"Číslo účtu: {account_number}")
 
         return new_account
+    
+    def find_account(self, account_number: int):
+        for account in self.accounts:
+            if account.account_number == account_number:
+                return account
+
+        return None
